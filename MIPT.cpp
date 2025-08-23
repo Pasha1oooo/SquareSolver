@@ -4,11 +4,11 @@
 #define dx   1e-5
 #define NearZero(x) (fabs((x)) <= dx)
 
-// TODO: assert
-// unittests
+// TODO: assert \/
+// unittests \/
 // x(x+2)
-//square lineal
-//const double dx  = 1e-5;
+// square lineal
+
 
 const int    INF = -1;
 
@@ -17,6 +17,9 @@ struct equation{
 };
 
 int test_solver(void);
+double checkRoot(struct equation P, double x);
+
+int RootsChecker(struct equation P, double x1, double x2);
 
 int solver(struct equation P, double * x1, double * x2);
 
@@ -59,8 +62,8 @@ int main(int argc, const char * argv[]){
 }
 
 int solver(struct equation P, double * x1, double * x2){
-    assert(x1!=0);
-    assert(x2!=0);
+    assert(x1!=NULL);
+    assert(x2!=NULL);
     if (NearZero(P.a)){
         if (NearZero(P.b)){
             if(NearZero(P.c)){
@@ -112,11 +115,22 @@ int test_solver(void){
     struct equation P = {1, -5, 6};
     double x1 = 0, x2 = 0;
     int num_sol = solver(P, &x1, &x2);
-    if (!(num_sol==2 && NearZero(x1-3) && NearZero(x2-2))){
+    if(!(num_sol==2 && RootsChecker(P,x1,x2)==1)){
         printf("FALED: (should be x1=3 x2=2) RESULT: x1=%lg x2=%lg\n\n",x1,x2);
     }
     else{
         printf("SUCCESS: (should be x1=3 x2=2) RESULT: x1=%lg x2=%lg\n\n",x1,x2);
     }
     return 0;
+}
+int RootsChecker(struct equation P, double x1, double x2){
+    if (NearZero(checkRoot(P,x1)) && (NearZero(checkRoot(P,x2)))){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}
+double checkRoot(struct equation P, double x){
+    return P.a * x * x + P.b * x +P.c ;
 }
