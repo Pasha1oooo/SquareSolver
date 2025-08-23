@@ -4,7 +4,7 @@
 
 #include "MIPT.h"
 
-int solver(struct equation P, double * x1, double * x2){
+NUM_SOL solver(struct equation P, double * x1, double * x2){
     assert(x1 != NULL);
     assert(x2 != NULL);
     if (IsZero(P.a)){
@@ -12,40 +12,41 @@ int solver(struct equation P, double * x1, double * x2){
             if(IsZero(P.c)){
                 return INF;
             }
-            return 0;
+            return ZERO;
         }
         return linearSolver(P, x1);
     }
     else{
         if (IsZero(P.c)){
             *x1=0;
-            return 1+linearSolver(P, x2);
+            *x2 = (-P.b) / P.a;
+            return TWO;
         }
         return quadraticSolver(P, x1, x2);
     }
 }
 
-int linearSolver(struct equation P, double * x){
+NUM_SOL linearSolver(struct equation P, double * x){
     assert(x != NULL);
     *x = (-P.c) / P.b;
-    return 1;
+    return ONE;
 }
 
-int quadraticSolver(struct equation P, double * x1 , double * x2){
+NUM_SOL quadraticSolver(struct equation P, double * x1 , double * x2){
     assert(x1 != NULL);
     assert(x2 != NULL);
     double D = P.b * P.b - 4 * P.a * P.c;
     if (D>0){
         *x1 = (-P.b + sqrt(D)) / (2 * P.a);
         *x2 = (-P.b - sqrt(D)) / (2 * P.a);
-        return 2;
+        return TWO;
     }
     else if (IsZero(D)){
         *x1 = (-P.b) / (2 * P.a);
-        return 1;
+        return ONE;
     }
     else{
-        return 0;
+        return ZERO;
     }
 
 }

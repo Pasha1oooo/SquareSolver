@@ -3,13 +3,17 @@
 #include <assert.h>
 #include "MIPT.h"
 
-void print_Unit(int true_num_sol, int num_sol, double x1, double x2, int i, FILE * fin);
+
+
+void print_Unit(NUM_SOL true_num_sol, NUM_SOL num_sol, double x1, double x2, int i, FILE * fin);
+
+
 
 int main(int argc, const char * argv[]){
     test_solver();
     struct equation P = {};
     double x1 = 0, x2 = 0;
-    int    num_sol = 0;
+    NUM_SOL num_sol = ZERO;
     if (argc > 1){
         ReadFromFile(argv[1], P, &x1, &x2);
     }
@@ -35,7 +39,7 @@ int ReadFromFile(const char * argv, struct equation P, double * x1 , double * x2
         perror("a");
         return 1;
     }
-    int num_sol = 0;
+    NUM_SOL num_sol = ZERO;
     while(1){
         int scanOK=fscanf(fin, "%lf%lf%lf", &P.a, &P.b, &P.c);
         if(scanOK != 3){
@@ -48,15 +52,15 @@ int ReadFromFile(const char * argv, struct equation P, double * x1 , double * x2
     return 0;
 }
 
-int print_sol(int num_sol, double x1, double x2){
+void print_sol(NUM_SOL num_sol, double x1, double x2){
     switch(num_sol){
-    case 2:
-        printf("Equation has 2 solutions: x1 = %lg x2 = %lg\n\n",x1,x2);
+    case TWO:     // Magic num TD
+        printf("Equation has 2 solutions: x1 = %lg x2 = %.100lg\n\n",x1,x2);
         break;
-    case 1:
+    case ONE:
         printf("Equation has 1 solution: x = %lg\n\n",x1);
         break;
-    case 0:
+    case ZERO:
         printf("Equation hasn't solutions\n\n");
         break;
     case INF:
@@ -65,32 +69,30 @@ int print_sol(int num_sol, double x1, double x2){
     default :
         printf("ERROR\n\n");
     }
-    return 0;
 }
 
-int test_solver(void){
+void test_solver(void){
     FILE * fin = fopen("/home/pasha/p/PROJECT/Unit_Tests.txt", "r");
     struct equation P = {};
-    int true_num_sol = 0;
+    NUM_SOL true_num_sol = ZERO;
     int i = 0;
     double x1 = 0, x2 = 0;
     while(1){
 
-        int scanOK=fscanf(fin, "%lf%lf%lf%d", &P.a, &P.b, &P.c, &true_num_sol);
+        int scanOK=fscanf(fin, "%lf%lf%lf%d", &P.a, &P.b, &P.c, (int*)&true_num_sol);
         if(scanOK < 4){
             break;
         }
-        int num_sol = solver(P, &x1, &x2);
+        NUM_SOL num_sol = solver(P, &x1, &x2);
         print_Unit(true_num_sol, num_sol, x1, x2 , i, fin);
 
         i++;
     }
-    return 0;
 }
-void print_Unit(int true_num_sol, int num_sol, double x1, double x2, int i, FILE * fin){
+void print_Unit(NUM_SOL true_num_sol, NUM_SOL num_sol, double x1, double x2, int i, FILE * fin){
     double true_x1 = 0, true_x2 = 0;
     switch(true_num_sol){
-    case 2:
+    case TWO: // magic num TD
         fscanf(fin, "%lg%lg", &true_x1, &true_x2);
         if(!(IsZero(true_x1 - x1) && IsZero(true_x2 - x2)  && IsZero(true_num_sol - num_sol))){
             printf("FALED: TEST %d (should be x1 = %lg x2 = %lg) RESULT: x1 = %lg x2 = %lg\n\n", i, true_x1, true_x2, x1, x2);
@@ -99,7 +101,7 @@ void print_Unit(int true_num_sol, int num_sol, double x1, double x2, int i, FILE
             printf("SUCCESS: TEST %d (should be x1 = %lg x2 = %lg) RESULT: x1 = %lg x2 = %lg\n\n" , i, true_x1, true_x2, x1, x2);
         }
         break;
-    case 1:
+    case ONE:
         fscanf(fin, "%lg", &true_x1);
         if(!(IsZero(true_x1 - x1) && IsZero(true_num_sol - num_sol))){
             printf("FALED: TEST %d (should be x1 = %lg) RESULT: x1 = %lg\n\n", i, true_x1, x1);
@@ -108,7 +110,7 @@ void print_Unit(int true_num_sol, int num_sol, double x1, double x2, int i, FILE
             printf("SUCCESS: TEST %d (should be x1 = %lg) RESULT: x1 = %lg\n\n" , i, true_x1, x1);
         }
         break;
-    case 0:
+    case ZERO:
         if(!(IsZero(true_num_sol - num_sol))){
             printf("FALED: TEST %d (should be 0 solutions) RESULT: %d solution(s)\n\n", i, num_sol);
         }
@@ -116,8 +118,12 @@ void print_Unit(int true_num_sol, int num_sol, double x1, double x2, int i, FILE
             printf("SUCCESS: TEST %d (should be 0 solutions) RESULT: 0 solutions\n\n" , i);
         }
         break;
-    default :
+    case INF:
         printf("ERROR\n\n");
+        break;
+    default :
+        break;
     }
+
 }
 
