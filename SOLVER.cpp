@@ -28,7 +28,7 @@ int solver(struct equation P, double * x1, double * x2){
 int linearSolver(struct equation P, double * x){
     assert(x != NULL);
     *x = (-P.c) / P.b;
-    return 0;
+    return 1;
 }
 
 int quadraticSolver(struct equation P, double * x1 , double * x2){
