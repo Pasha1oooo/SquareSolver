@@ -4,7 +4,7 @@
 
 #include "MIPT.h"
 
-NUM_SOL solver(equation P, double * x1, double * x2){
+NUM_SOL Solver(equation P, double * x1, double * x2){
     assert(x1 != NULL);
     assert(x2 != NULL);
     if (IsZero(P.a)){
@@ -22,7 +22,7 @@ NUM_SOL solver(equation P, double * x1, double * x2){
             *x2 = (-P.b) / P.a;
             return TWO;
         }
-        return quadraticSolver(P, x1, x2);
+        return QuadraticSolver(P, x1, x2);
     }
 }
 
@@ -32,7 +32,7 @@ NUM_SOL linearSolver(equation P, double * x){
     return ONE;
 }
 
-NUM_SOL quadraticSolver(equation P, double * x1 , double * x2){
+NUM_SOL QuadraticSolver(equation P, double * x1 , double * x2){
     assert(x1 != NULL);
     assert(x2 != NULL);
     double D = P.b * P.b - 4 * P.a * P.c;

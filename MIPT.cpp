@@ -5,8 +5,8 @@
 
 int main(int argc, const char * argv[]){
 
-    if (flag_finder(argc, argv, "-t") == 1){
-        test_solver();
+    if (FlagFinder(argc, argv, "-t") == ONE){
+        TestSolver();
     }
     equation P = {};
     double x1 = 0, x2 = 0;
@@ -24,17 +24,17 @@ int main(int argc, const char * argv[]){
             printf("ERROR: Incorrect input \n\n");
             break;
         }
-        num_sol = solver(P, &x1, &x2);
-        print_sol(num_sol, x1, x2);
+        num_sol = Solver(P, &x1, &x2);
+        PrintSol(num_sol, x1, x2);
         }
         break;
     case 'u':
     case 'U':
-        test_solver();
+        TestSolver();
         break;
     case 'f':
     default :
-        if (argc<2){
+        if (argc < 2){
             printf("ERROR: Incorrect input \n\n");
             break;
         }
@@ -54,18 +54,18 @@ int ReadFromFile(const char * argv, equation P, double * x1 , double * x2){
     }
     NUM_SOL num_sol = ZERO;
     while(1){
-        int scanOK=fscanf(fin, "%lf%lf%lf", &P.a, &P.b, &P.c);
+        int scanOK = fscanf(fin, "%lf%lf%lf", &P.a, &P.b, &P.c);
         if(scanOK != 3){
             printf("ERROR: Incorrect input \n\n");
             break;
         }
-        num_sol = solver(P, x1, x2);
-        print_sol(num_sol, *x1, *x2);
+        num_sol = Solver(P, x1, x2);
+        PrintSol(num_sol, *x1, *x2);
     }
     return 0;
 }
 
-void print_sol(NUM_SOL num_sol, double x1, double x2){
+void PrintSol(NUM_SOL num_sol, double x1, double x2){
     switch(num_sol){
     case TWO:
         printf("Equation has 2 solutions: x1 = %lg x2 = %lg\n",x1,x2);
@@ -84,7 +84,7 @@ void print_sol(NUM_SOL num_sol, double x1, double x2){
     }
 }
 
-void test_solver(void){
+void TestSolver(void){
     FILE * fin = fopen("/home/pasha/p/PROJECT/Unit_Tests.txt", "r");
     equation P = {};
     NUM_SOL true_num_sol = ZERO;
@@ -92,18 +92,18 @@ void test_solver(void){
     double x1 = 0, x2 = 0;
     int unit_passed = 0;
     while(1){
-        int scanOK=fscanf(fin, "%lf%lf%lf%d", &P.a, &P.b, &P.c, (int*)&true_num_sol);
+        int scanOK = fscanf(fin, "%lf%lf%lf%d", &P.a, &P.b, &P.c, (int*)&true_num_sol);
         if(scanOK < 4){
             break;
         }
-        NUM_SOL num_sol = solver(P, &x1, &x2);
-        print_Unit(true_num_sol, num_sol, x1, x2 , i, fin, &unit_passed);
+        NUM_SOL num_sol = Solver(P, &x1, &x2);
+        PrintUnit(true_num_sol, num_sol, x1, x2 , i, fin, &unit_passed);
         i++;
     }
     printf("Tests passed : %d / %d\n", unit_passed, i);
 
 }
-void print_Unit(NUM_SOL true_num_sol, NUM_SOL num_sol, double x1, double x2, int i, FILE * fin, int * unit_passed){
+void PrintUnit(NUM_SOL true_num_sol, NUM_SOL num_sol, double x1, double x2, int i, FILE * fin, int * unit_passed){
     double true_x1 = 0, true_x2 = 0;
     switch(true_num_sol){
     case TWO:
@@ -149,24 +149,24 @@ void print_Unit(NUM_SOL true_num_sol, NUM_SOL num_sol, double x1, double x2, int
     }
 
 }
-int flag_finder (int argc, const char * argv[], const char * flag){
+NUM_SOL FlagFinder (int argc, const char * argv[], const char * flag){
     for(int i = 0; i < argc; i++){
         printf("%s\n", argv[i]);
-        if (comparison_str(argv[i],flag)==1){
-            return 1;
+        if (ComparisonStr(argv[i],flag) == ONE){
+            return ONE;
         }
     }
-    return 0;
+    return ZERO;
 }
 
-int comparison_str(const char * str1, const char * str2){
+NUM_SOL ComparisonStr(const char * str1, const char * str2){
     int j = 0;
     while((str1[j] != '\0') && (str2[j] != '\0')){
         if (str1[j] != str2[j]){
-            return 0;
+            return ZERO;
         }
         j++;
     }
-    return 1;
+    return ONE;
 }
 

@@ -12,15 +12,15 @@ typedef struct equation{
     double a = 0, b = 0 ,c = 0;
 }equation;
 
-void     test_solver(void);
-void    print_sol(NUM_SOL num_sol, double x1, double x2);
+void    TestSolver(void);
+void    PrintSol(NUM_SOL num_sol, double x1, double x2);
 double  checkRoot(equation P, double x);
 int     RootsChecker(equation P, double x1, double x2);
-NUM_SOL     solver(equation P, double * x1, double * x2);
-NUM_SOL     linearSolver(equation P, double * x1);
-NUM_SOL quadraticSolver(equation P, double * x1 , double * x2);
+NUM_SOL Solver(equation P, double * x1, double * x2);
+NUM_SOL linearSolver(equation P, double * x1);
+NUM_SOL QuadraticSolver(equation P, double * x1 , double * x2);
 int     ReadFromFile(const char * argv, equation P, double * x1 , double * x2);
-void    print_Unit(NUM_SOL true_num_sol, NUM_SOL num_sol, double x1, double x2, int i, FILE * fin,  int * unit_passed);
-int     flag_finder (int argc, const char * argv[], const char * flag);
-int     comparison_str(const char * str1, const char * str2); //strcmp
+void    PrintUnit(NUM_SOL true_num_sol, NUM_SOL num_sol, double x1, double x2, int i, FILE * fin,  int * unit_passed);
+NUM_SOL FlagFinder(int argc, const char * argv[], const char * flag);
+NUM_SOL ComparisonStr(const char * str1, const char * str2); //strcmp
 
