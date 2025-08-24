@@ -86,11 +86,11 @@ void PrintSol(NUM_SOL num_sol, double x1, double x2) {
         break;
 
     case SOL_ZERO:
-        printf("Equation hasn't solutions\n");
+        printf("Equation has no solutions.\n");
         break;
 
     case SOL_INF:
-        printf("Equation has Infinity solutions\n");
+        printf("Equation has an infinite number of solutions.\n");
         break;
     default :
         printf("ERROR\n");
