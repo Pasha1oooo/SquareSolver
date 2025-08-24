@@ -16,7 +16,5 @@ g++ $flags -c SOLVER.cpp -o SOLVER.o || exit $?
 
 g++ $flags -o MIPT MIPT.o SOLVER.o  || exit $?
 
-./MIPT   #"/home/pasha/p/PROJECT/coefficients.txt"
-./MiPT.h
-./SOLVER
+./MIPT   "/home/pasha/p/PROJECT/coefficients.txt"
 
