@@ -5,12 +5,12 @@
 
 int main(int argc, const char * argv[]){
 
-    if (FlagFinder(argc, argv, "-t") == ONE){
+    if (FlagFinder(argc, argv, "-t")){
         TestSolver();
     }
     equation P = {};
     double x1 = 0, x2 = 0;
-    NUM_SOL num_sol = ZERO;
+    NUM_SOL num_sol = SOL_ZERO;
     printf("Enter the mode: [m|f|u] (m - manual, f - file (default), u - unit test)\n");
     char mode = 'M';
     scanf("%c", &mode);
@@ -52,7 +52,7 @@ int ReadFromFile(const char * argv, equation P, double * x1 , double * x2){
         perror("a");
         return 1;
     }
-    NUM_SOL num_sol = ZERO;
+    NUM_SOL num_sol = SOL_ZERO;
     while(1){
         int scanOK = fscanf(fin, "%lf%lf%lf", &P.a, &P.b, &P.c);
         if(scanOK != 3){
@@ -67,16 +67,16 @@ int ReadFromFile(const char * argv, equation P, double * x1 , double * x2){
 
 void PrintSol(NUM_SOL num_sol, double x1, double x2){
     switch(num_sol){
-    case TWO:
+    case SOL_TWO:
         printf("Equation has 2 solutions: x1 = %lg x2 = %lg\n",x1,x2);
         break;
-    case ONE:
+    case SOL_ONE:
         printf("Equation has 1 solution: x = %lg\n",x1);
         break;
-    case ZERO:
+    case SOL_ZERO:
         printf("Equation hasn't solutions\n");
         break;
-    case INF:
+    case SOL_INF:
         printf("Equation has Infinity solutions\n");
         break;
     default :
@@ -87,7 +87,7 @@ void PrintSol(NUM_SOL num_sol, double x1, double x2){
 void TestSolver(void){
     FILE * fin = fopen("/home/pasha/p/PROJECT/Unit_Tests.txt", "r");
     equation P = {};
-    NUM_SOL true_num_sol = ZERO;
+    NUM_SOL true_num_sol = SOL_ZERO;
     int i = 0;
     double x1 = 0, x2 = 0;
     int unit_passed = 0;
@@ -106,7 +106,7 @@ void TestSolver(void){
 void PrintUnit(NUM_SOL true_num_sol, NUM_SOL num_sol, double x1, double x2, int i, FILE * fin, int * unit_passed){
     double true_x1 = 0, true_x2 = 0;
     switch(true_num_sol){
-    case TWO:
+    case SOL_TWO:
         fscanf(fin, "%lg%lg", &true_x1, &true_x2);
         if(!(IsZero(true_x1 - x1) && IsZero(true_x2 - x2)  && IsZero(true_num_sol - num_sol))){
             printf("FALED: TEST %d (should be x1 = %lg x2 = %lg) RESULT: x1 = %lg x2 = %lg\n", i, true_x1, true_x2, x1, x2);
@@ -116,7 +116,7 @@ void PrintUnit(NUM_SOL true_num_sol, NUM_SOL num_sol, double x1, double x2, int 
             (*unit_passed)++;
         }
         break;
-    case ONE:
+    case SOL_ONE:
         fscanf(fin, "%lg", &true_x1);
         if(!(IsZero(true_x1 - x1) && IsZero(true_num_sol - num_sol))){
             printf("FALED: TEST %d (should be x1 = %lg) RESULT: x1 = %lg\n", i, true_x1, x1);
@@ -126,7 +126,7 @@ void PrintUnit(NUM_SOL true_num_sol, NUM_SOL num_sol, double x1, double x2, int 
             (*unit_passed)++;
         }
         break;
-    case ZERO:
+    case SOL_ZERO:
         if(!(IsZero(true_num_sol - num_sol))){
             printf("FALED: TEST %d (should be 0 solutions) RESULT: %d solution(s)\n", i, num_sol);
         }
@@ -135,7 +135,7 @@ void PrintUnit(NUM_SOL true_num_sol, NUM_SOL num_sol, double x1, double x2, int 
             (*unit_passed)++;
         }
         break;
-    case INF:
+    case SOL_INF:
         if(!(IsZero(true_num_sol - num_sol))){
             printf("FALED: TEST %d (should be Infinity solutions) RESULT: %d solution(s)\n", i, num_sol);
         }
@@ -149,24 +149,24 @@ void PrintUnit(NUM_SOL true_num_sol, NUM_SOL num_sol, double x1, double x2, int 
     }
 
 }
-NUM_SOL FlagFinder (int argc, const char * argv[], const char * flag){
+bool FlagFinder (int argc, const char * argv[], const char * flag){
     for(int i = 0; i < argc; i++){
         printf("%s\n", argv[i]);
-        if (ComparisonStr(argv[i],flag) == ONE){
-            return ONE;
+        if (ComparisonStr(argv[i],flag)){
+            return true;
         }
     }
-    return ZERO;
+    return false;
 }
 
-NUM_SOL ComparisonStr(const char * str1, const char * str2){
+bool ComparisonStr(const char * str1, const char * str2){
     int j = 0;
     while((str1[j] != '\0') && (str2[j] != '\0')){
         if (str1[j] != str2[j]){
-            return ZERO;
+            return false;
         }
         j++;
     }
-    return ONE;
+    return true;
 }
 

@@ -10,26 +10,26 @@ NUM_SOL Solver(equation P, double * x1, double * x2){
     if (IsZero(P.a)){
         if (IsZero(P.b)){
             if(IsZero(P.c)){
-                return INF;
+                return SOL_INF;
             }
-            return ZERO;
+            return SOL_ZERO;
         }
-        return linearSolver(P, x1);
+        return LinearSolver(P, x1);
     }
     else{
         if (IsZero(P.c)){
-            *x1=0;
+            *x1 = 0;
             *x2 = (-P.b) / P.a;
-            return TWO;
+            return SOL_TWO;
         }
         return QuadraticSolver(P, x1, x2);
     }
 }
 
-NUM_SOL linearSolver(equation P, double * x){
+NUM_SOL LinearSolver(equation P, double * x){
     assert(x != NULL);
     *x = (-P.c) / P.b;
-    return ONE;
+    return SOL_ONE;
 }
 
 NUM_SOL QuadraticSolver(equation P, double * x1 , double * x2){
@@ -39,14 +39,14 @@ NUM_SOL QuadraticSolver(equation P, double * x1 , double * x2){
     if (D>0){
         *x1 = (-P.b + sqrt(D)) / (2 * P.a);
         *x2 = (-P.b - sqrt(D)) / (2 * P.a);
-        return TWO;
+        return SOL_TWO;
     }
     else if (IsZero(D)){
         *x1 = (-P.b) / (2 * P.a);
-        return ONE;
+        return SOL_ONE;
     }
     else{
-        return ZERO;
+        return SOL_ZERO;
     }
 
 }
