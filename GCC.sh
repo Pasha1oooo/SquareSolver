@@ -14,7 +14,7 @@ flags="-lm -D _DEBUG -ggdb3  -O0 -Wall -Wextra \
 g++ $flags -c MIPT.cpp -o MIPT.o || exit $?
 g++ $flags -c SOLVER.cpp -o SOLVER.o || exit $?
 
-g++ $flags -o MIPT MIPT.o SOLVER.o  || exit $?
+g++ $flags MIPT.o SOLVER.o -o MIPT || exit $?
 
-./MIPT   "/home/pasha/p/PROJECT/coefficients.txt"
+./MIPT "/home/pasha/p/PROJECT/coefficients.txt" -t
 
