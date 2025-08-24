@@ -13,8 +13,11 @@ typedef struct {
 } equation;
 
 void    TestSolver(void);
+
 void    PrintSol(NUM_SOL num_sol, double x1, double x2);
+
 double  checkRoot(equation P, double x);
+
 int     RootsChecker(equation P, double x1, double x2);
 NUM_SOL Solver(equation P, double * x1, double * x2);
 NUM_SOL LinearSolver(equation P, double * x1);
