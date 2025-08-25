@@ -6,7 +6,14 @@
 
 //Make colored textj    \033[0m \033[0;32;40m       \033[0;34;40m\033[0m       \033[0;31;40mERROR\033[0m
 
+
+/**
+ * @brief
+ *
+*/
+
 int main(int argc, const char *argv[]) {
+    printf("%s\n", __TIME__);
     equation P = {};
     double x1 = 0, x2 = 0;
     NUM_SOL num_sol = SOL_ZERO;
@@ -29,14 +36,16 @@ int main(int argc, const char *argv[]) {
     case 'm':
     case 'M':
         while(1) {
-        printf("Enter the coefficients of the quadratic equation:\n");
-        int scanOK = scanf("%lf%lf%lf", &P.a, &P.b, &P.c);
-        if(scanOK != 3) {
-            printf("%sERROR%s: Incorrect input \n\n", RED, RESET);
-            break;
-        }
-        num_sol = Solver(P, &x1, &x2);
-        PrintSol(num_sol, x1, x2);
+            printf("Enter the coefficients of the quadratic equation:\n");
+            int scanOK = scanf("%lf%lf%lf", &P.a, &P.b, &P.c);
+            if(scanOK != 3) {
+                printf("%sERROR%s: Incorrect input \n\n", RED, RESET);
+                break;
+
+            }
+            num_sol = Solver(P, &x1, &x2);
+            PrintSol(num_sol, x1, x2);
+            //buff
         }
         break;
     case 'u':
@@ -52,10 +61,14 @@ int main(int argc, const char *argv[]) {
         ReadFromFile(argv[1], P, &x1, &x2);
         break;
     }
+
     return 0;
 }
 
-int ReadFromFile(const char * argv, equation P, double * x1 , double * x2) {
+int ReadFromFile(const char * argv, double * x1 , double * x2) {
+    MyAssert(x1 == NULL);
+    MyAssert(x2 == NULL);
+    equation P = {};
     FILE * fin = fopen(argv, "r");
     if(fin == NULL) {
         perror("a");
@@ -73,7 +86,16 @@ int ReadFromFile(const char * argv, equation P, double * x1 , double * x2) {
     }
     return 0;
 }
+/**
+    \brief
 
+    \tparam
+
+    \param [in] a
+    \param [in] b
+
+    \return
+*/
 void PrintSol(NUM_SOL num_sol, double x1, double x2) {
     switch(num_sol) {
 
@@ -111,20 +133,20 @@ void TestSolver(void) {
             break;
         }
         NUM_SOL num_sol = Solver(P, &x1, &x2);
-        PrintUnit(true_num_sol, num_sol, x1, x2 , i, fin, &unit_passed);
+        PrintUnitTestResult(true_num_sol, num_sol, x1, x2 , i, fin, &unit_passed);
         i++;
     }
     printf("Tests passed : %d / %d\n", unit_passed, i-1);
 
 }
-void PrintUnit(NUM_SOL true_num_sol, NUM_SOL num_sol, double x1, double x2, int i, FILE * fin, int * unit_passed) {
+void PrintUnitTestResult(NUM_SOL true_num_sol, NUM_SOL num_sol, double x1, double x2, int i, FILE * fin, int * unit_passed) {
     double true_x1 = 0, true_x2 = 0;
     switch(true_num_sol) {
 
     case SOL_TWO:
         fscanf(fin, "%lg%lg", &true_x1, &true_x2);
         if(!(IsZero(true_x1 - x1) && IsZero(true_x2 - x2)  && IsZero(true_num_sol - num_sol))) {
-            printf("%sFAILED%s: TEST %d (should be x1 = %lg x2 = %lg) RESULT: x1 = %lg x2 = %lg\n", RED, RESET, i, true_x1, true_x2, x1, x2);
+            printf(WordRED("FAILED") ": TEST %d (should be x1 = %lg x2 = %lg) RESULT: x1 = %lg x2 = %lg\n", i, true_x1, true_x2, x1, x2);
         }
         else {
             printf("%sSUCCESS%s: TEST %d (should be x1 = %lg x2 = %lg) RESULT: x1 = %lg x2 = %lg\n" , GREEN, RESET, i, true_x1, true_x2, x1, x2);
@@ -135,28 +157,28 @@ void PrintUnit(NUM_SOL true_num_sol, NUM_SOL num_sol, double x1, double x2, int 
     case SOL_ONE:
         fscanf(fin, "%lg", &true_x1);
         if(!(IsZero(true_x1 - x1) && IsZero(true_num_sol - num_sol))){
-            printf("%sFAILED%s: TEST %d (should be x1 = %lg) RESULT: x1 = %lg\n", RED, RESET, i, true_x1, x1);
+            printf(WordRED("FAILED")": TEST %d (should be x1 = %lg) RESULT: x1 = %lg\n", i, true_x1, x1);
         }
         else {
-            printf("%sSUCCESS%s: TEST %d (should be x1 = %lg) RESULT: x1 = %lg\n" , GREEN, RESET, i, true_x1, x1);
+            printf(WordGREEN("SUCCESS")" TEST %d (should be x1 = %lg) RESULT: x1 = %lg\n" , i, true_x1, x1);
             (*unit_passed)++;
         }
         break;
     case SOL_ZERO:
         if(!(IsZero(true_num_sol - num_sol))) {
-            printf("%sFAILED%s: TEST %d (should be 0 solutions) RESULT: %d solution(s)\n", RED, RESET, i, num_sol);
+            printf(WordRED("FAILED")" TEST %d (should be 0 solutions) RESULT: %d solution(s)\n", i, num_sol);
         }
         else {
-            printf("%sSUCCESS%s: TEST %d (should be 0 solutions) RESULT: 0 solutions\n" , GREEN, RESET, i);
+            printf(WordGREEN("SUCCESS")" TEST %d (should be 0 solutions) RESULT: 0 solutions\n" , i);
             (*unit_passed)++;
         }
         break;
     case SOL_INF:
         if(!(IsZero(true_num_sol - num_sol))) {
-            printf("%sFAILED%s: TEST %d (should be Infinity solutions) RESULT: %d solution(s)\n", RED, RESET, i, num_sol);
+            printf(WordRED("FAILED")": TEST %d (should be Infinity solutions) RESULT: %d solution(s)\n", i, num_sol);
         }
         else {
-            printf("%sSUCCESS%s: TEST %d (should be Infinity solutions) RESULT: Infinity solutions\n" , GREEN, RESET, i);
+            printf(WordGREEN("SUCCESS") ": TEST %d (should be Infinity solutions) RESULT: Infinity solutions\n", i);
             (*unit_passed)++;
         }
         break;
@@ -175,6 +197,8 @@ bool FlagFinder (int argc, const char * argv[], const char * flag) {
 }
 
 bool ComparisonStr(const char * str1, const char * str2) {
+    MyAssert(str1 == NULL);
+    MyAssert(str2 == NULL);
     int j = 0;
     while((str1[j] != '\0') && (str2[j] != '\0')) {
         if (str1[j] != str2[j]) {
@@ -183,5 +207,11 @@ bool ComparisonStr(const char * str1, const char * str2) {
         j++;
     }
     return true;
+}
+
+void FindInFlagBase() {
+    switch(){
+
+    }
 }
 

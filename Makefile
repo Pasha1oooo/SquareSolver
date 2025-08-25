@@ -25,7 +25,7 @@ run_file: MIPT
 MIPT: MIPT.o SOLVER.o
 	@g++ ${CXXFLAGS} MIPT.o SOLVER.o -o MIPT
 
-MIPT.o: MIPT.cpp MIPT.h
+MIPT.o: MIPT.cpp MIPT.h COLORS.h
 	@g++ ${CXXFLAGS} -c MIPT.cpp -o MIPT.o
 
 SOLVER.o: SOLVER.cpp
