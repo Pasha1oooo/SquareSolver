@@ -2,8 +2,9 @@
 #include <math.h>
 #include <assert.h>
 #include "MIPT.h"
+#include "COLORS.h"
 
-//Make colored textj
+//Make colored textj    \033[0m \033[0;32;40m       \033[0;34;40m\033[0m       \033[0;31;40mERROR\033[0m
 
 int main(int argc, const char *argv[]) {
     equation P = {};
@@ -23,6 +24,7 @@ int main(int argc, const char *argv[]) {
     printf("Enter the mode: [m|f|u] (m - manual, f - file (default), u - unit test)\n");
     char mode = 'M';
     scanf("%c", &mode);
+
     switch (mode) {
     case 'm':
     case 'M':
@@ -30,7 +32,7 @@ int main(int argc, const char *argv[]) {
         printf("Enter the coefficients of the quadratic equation:\n");
         int scanOK = scanf("%lf%lf%lf", &P.a, &P.b, &P.c);
         if(scanOK != 3) {
-            printf("ERROR: Incorrect input \n\n");
+            printf("%sERROR%s: Incorrect input \n\n", RED, RESET);
             break;
         }
         num_sol = Solver(P, &x1, &x2);
@@ -44,7 +46,7 @@ int main(int argc, const char *argv[]) {
     case 'f':
     default :
         if (argc < 2) {
-            printf("ERROR: Incorrect input \n\n");
+            printf("%sERROR%s: Incorrect input \n\n", RED, RESET);
             break;
         }
         ReadFromFile(argv[1], P, &x1, &x2);
@@ -54,8 +56,6 @@ int main(int argc, const char *argv[]) {
 }
 
 int ReadFromFile(const char * argv, equation P, double * x1 , double * x2) {
-    assert(x1 != NULL);
-    assert(x2 != NULL);
     FILE * fin = fopen(argv, "r");
     if(fin == NULL) {
         perror("a");
@@ -65,7 +65,7 @@ int ReadFromFile(const char * argv, equation P, double * x1 , double * x2) {
     while(1) {
         int scanOK = fscanf(fin, "%lf%lf%lf", &P.a, &P.b, &P.c);
         if(scanOK != 3) {
-            printf("ERROR: Incorrect input \n\n");
+            printf("%sERROR%s: Incorrect input \n\n", RED, RESET);
             break;
         }
         num_sol = Solver(P, x1, x2);
@@ -78,7 +78,7 @@ void PrintSol(NUM_SOL num_sol, double x1, double x2) {
     switch(num_sol) {
 
     case SOL_TWO:
-        printf("Equation has 2 solutions: x1 = %lg x2 = %lg\n",x1,x2);
+        printf("Equation has  2 solutions: x1 = %lg x2 = %lg\n",x1,x2);
         break;
 
     case SOL_ONE:
@@ -93,7 +93,7 @@ void PrintSol(NUM_SOL num_sol, double x1, double x2) {
         printf("Equation has Infinity solutions\n");
         break;
     default :
-        printf("ERROR\n");
+        printf("%sERROR%s\n", RED, RESET);
     }
 }
 
@@ -102,7 +102,7 @@ void TestSolver(void) {
     FILE * fin = fopen("/home/pasha/p/PROJECT/Unit_Tests.txt", "r");
     equation P = {};
     NUM_SOL true_num_sol = SOL_ZERO;
-    int i = 0;
+    int i = 1;
     double x1 = 0, x2 = 0;
     int unit_passed = 0;
     while(1) {
@@ -114,7 +114,7 @@ void TestSolver(void) {
         PrintUnit(true_num_sol, num_sol, x1, x2 , i, fin, &unit_passed);
         i++;
     }
-    printf("Tests passed : %d / %d\n", unit_passed, i);
+    printf("Tests passed : %d / %d\n", unit_passed, i-1);
 
 }
 void PrintUnit(NUM_SOL true_num_sol, NUM_SOL num_sol, double x1, double x2, int i, FILE * fin, int * unit_passed) {
@@ -124,10 +124,10 @@ void PrintUnit(NUM_SOL true_num_sol, NUM_SOL num_sol, double x1, double x2, int 
     case SOL_TWO:
         fscanf(fin, "%lg%lg", &true_x1, &true_x2);
         if(!(IsZero(true_x1 - x1) && IsZero(true_x2 - x2)  && IsZero(true_num_sol - num_sol))) {
-            printf("FALED: TEST %d (should be x1 = %lg x2 = %lg) RESULT: x1 = %lg x2 = %lg\n", i, true_x1, true_x2, x1, x2);
+            printf("%sFAILED%s: TEST %d (should be x1 = %lg x2 = %lg) RESULT: x1 = %lg x2 = %lg\n", RED, RESET, i, true_x1, true_x2, x1, x2);
         }
         else {
-            printf("SUCCESS: TEST %d (should be x1 = %lg x2 = %lg) RESULT: x1 = %lg x2 = %lg\n" , i, true_x1, true_x2, x1, x2);
+            printf("%sSUCCESS%s: TEST %d (should be x1 = %lg x2 = %lg) RESULT: x1 = %lg x2 = %lg\n" , GREEN, RESET, i, true_x1, true_x2, x1, x2);
             (*unit_passed)++;
         }
         break;
@@ -135,28 +135,28 @@ void PrintUnit(NUM_SOL true_num_sol, NUM_SOL num_sol, double x1, double x2, int 
     case SOL_ONE:
         fscanf(fin, "%lg", &true_x1);
         if(!(IsZero(true_x1 - x1) && IsZero(true_num_sol - num_sol))){
-            printf("FALED: TEST %d (should be x1 = %lg) RESULT: x1 = %lg\n", i, true_x1, x1);
+            printf("%sFAILED%s: TEST %d (should be x1 = %lg) RESULT: x1 = %lg\n", RED, RESET, i, true_x1, x1);
         }
         else {
-            printf("SUCCESS: TEST %d (should be x1 = %lg) RESULT: x1 = %lg\n" , i, true_x1, x1);
+            printf("%sSUCCESS%s: TEST %d (should be x1 = %lg) RESULT: x1 = %lg\n" , GREEN, RESET, i, true_x1, x1);
             (*unit_passed)++;
         }
         break;
     case SOL_ZERO:
         if(!(IsZero(true_num_sol - num_sol))) {
-            printf("FALED: TEST %d (should be 0 solutions) RESULT: %d solution(s)\n", i, num_sol);
+            printf("%sFAILED%s: TEST %d (should be 0 solutions) RESULT: %d solution(s)\n", RED, RESET, i, num_sol);
         }
         else {
-            printf("SUCCESS: TEST %d (should be 0 solutions) RESULT: 0 solutions\n" , i);
+            printf("%sSUCCESS%s: TEST %d (should be 0 solutions) RESULT: 0 solutions\n" , GREEN, RESET, i);
             (*unit_passed)++;
         }
         break;
     case SOL_INF:
         if(!(IsZero(true_num_sol - num_sol))) {
-            printf("FALED: TEST %d (should be Infinity solutions) RESULT: %d solution(s)\n", i, num_sol);
+            printf("%sFAILED%s: TEST %d (should be Infinity solutions) RESULT: %d solution(s)\n", RED, RESET, i, num_sol);
         }
         else {
-            printf("SUCCESS: TEST %d (should be Infinity solutions) RESULT: Infinity solutions\n" , i);
+            printf("%sSUCCESS%s: TEST %d (should be Infinity solutions) RESULT: Infinity solutions\n" , GREEN, RESET, i);
             (*unit_passed)++;
         }
         break;
@@ -167,7 +167,6 @@ void PrintUnit(NUM_SOL true_num_sol, NUM_SOL num_sol, double x1, double x2, int 
 }
 bool FlagFinder (int argc, const char * argv[], const char * flag) {
     for(int i = 0; i < argc; i++) {
-        printf("%s\n", argv[i]);
         if (ComparisonStr(argv[i],flag)) {
             return true;
         }
