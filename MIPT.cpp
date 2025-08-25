@@ -23,7 +23,7 @@ int main(int argc, const char *argv[]) {
         return 0;
     }
 
-    if (FlagFinder(argc, argv, "/home/pasha/p/PROJECT/coefficients.txt")) {
+    if (FlagFinder(argc, argv, "coefficients.txt")) {
         ReadFromFile(argv[1], P, &x1, &x2);
         return 0;
     }
@@ -108,11 +108,11 @@ void PrintSol(NUM_SOL num_sol, double x1, double x2) {
         break;
 
     case SOL_ZERO:
-        printf("Equation hasn't solutions\n");
+        printf("Equation has no solutions.\n");
         break;
 
     case SOL_INF:
-        printf("Equation has Infinity solutions\n");
+        printf("Equation has an infinite number of solutions.\n");
         break;
     default :
         printf("%sERROR%s\n", RED, RESET);
@@ -121,7 +121,7 @@ void PrintSol(NUM_SOL num_sol, double x1, double x2) {
 
 
 void TestSolver(void) {
-    FILE * fin = fopen("/home/pasha/p/PROJECT/Unit_Tests.txt", "r");
+    FILE * fin = fopen("Unit_Tests.txt", "r");
     equation P = {};
     NUM_SOL true_num_sol = SOL_ZERO;
     int i = 1;
@@ -175,10 +175,11 @@ void PrintUnitTestResult(NUM_SOL true_num_sol, NUM_SOL num_sol, double x1, doubl
         break;
     case SOL_INF:
         if(!(IsZero(true_num_sol - num_sol))) {
-            printf(WordRED("FAILED")": TEST %d (should be Infinity solutions) RESULT: %d solution(s)\n", i, num_sol);
+            printf(WordRED("FAILED")": TEST %d (should be infinite number of solutions) RESULT: %d solution(s)\n", i, num_sol);
         }
         else {
-            printf(WordGREEN("SUCCESS") ": TEST %d (should be Infinity solutions) RESULT: Infinity solutions\n", i);
+            printf(WordGREEN("SUCCESS") ": TEST %d (should be infinite number of solutions) RESULT: infinite number of solutions\n", i);
+
             (*unit_passed)++;
         }
         break;
