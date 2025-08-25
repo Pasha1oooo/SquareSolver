@@ -14,20 +14,20 @@ CXXFLAGS= -lm -D _DEBUG -ggdb3  -O0 -Wall -Wextra \
 all: MIPT
 
 run: MIPT
-	./MIPT
+	@./MIPT
 
 run_unit: MIPT
-	./MIPT -t
+	@./MIPT -t
 
 run_file: MIPT
-	./MIPT "/home/pasha/p/PROJECT/coefficients.txt"
+	@./MIPT "/home/pasha/p/PROJECT/coefficients.txt"
 
 MIPT: MIPT.o SOLVER.o
-	g++ ${CXXFLAGS} MIPT.o SOLVER.o -o MIPT
+	@g++ ${CXXFLAGS} MIPT.o SOLVER.o -o MIPT
 
-MIPT.o: MIPT.cpp MIPT.h
-	g++ ${CXXFLAGS} -c MIPT.cpp -o MIPT.o
+MIPT.o: MIPT.cpp MIPT.h COLORS.h
+	@g++ ${CXXFLAGS} -c MIPT.cpp -o MIPT.o
 
 SOLVER.o: SOLVER.cpp
-	g++ ${CXXFLAGS} -c SOLVER.cpp -o SOLVER.o
+	@g++ ${CXXFLAGS} -c SOLVER.cpp -o SOLVER.o
 
