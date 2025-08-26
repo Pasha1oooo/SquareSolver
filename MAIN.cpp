@@ -4,8 +4,8 @@
 #include "SOLVER.h"
 #include "MyAssert.h"
 
-#define dx   1e-5
-#define IsZero(x) (fabs((x)) <= dx)
+#define DX   1e-5
+#define IsZero(x) (fabs((x)) <= DX)
 
 typedef enum {
     MODE_t = 1,
@@ -31,9 +31,11 @@ static bool    ComparisonStr(const char * str1, const char * str2); //strcmp
 */
 
 int main(int argc, const char *argv[]) {
+    //double DX;
     printf("%s\n", __TIME__);
+    printf("MEOW\n");
     const char * file = NULL;
-    switch(FindInFlagBase( argc, argv, &file)){
+    switch(FindInFlagBase( argc, argv, &file)) {
     case MODE_t:
         TestSolver();
         return 0;
@@ -71,6 +73,7 @@ static int ReadFromFile(const char * argv) {
     }
     return 0;
 }
+
 /**
     \brief
 
@@ -81,6 +84,7 @@ static int ReadFromFile(const char * argv) {
 
     \return
 */
+
 static void PrintSol(NUM_SOL num_sol, double x1, double x2) {
     switch(num_sol) {
 
@@ -211,25 +215,26 @@ static FLAGS FindInFlagBase(int argc, const char * argv[], const char ** file) {
     return MODE_m;
 }
 
-static void ClearBuffer(void){
+static void ClearBuffer(void) {
     int c = -1;
     while(c != '\n'){
         c = getchar();
     }
 }
 
-static void PrintHelp(void){
+static void PrintHelp(void) {
     printf("flags :\n");
     printf("-t                  : starts unit tests\n");
     printf("-f <name of file>   : solve tests from file\n");
     printf("--help              : print information about flags\n");
 }
-static void ManualMode(void){
+static void ManualMode(void) {
     equation P = {};
     double x1 = 0, x2 = 0;
     NUM_SOL num_sol = SOL_ZERO;
-    printf("Enter the mode: [m|f|u] (m - manual, f - file (default), u - unit test)\n");
     char mode = 'M';
+
+    printf("Enter the mode: [m|u] (m - manual, u - unit test)\n");
     scanf("%c", &mode);
     switch (mode) {
         case 'm':

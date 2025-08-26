@@ -1,5 +1,5 @@
-#define dx   1e-5
-#define IsZero(x) (fabs((x)) <= dx)
+#define DX   1e-5
+#define IsZero(x) (fabs((x)) <= DX)
 
 typedef enum {
     SOL_ZERO = 0,
