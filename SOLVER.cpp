@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>
-//////
-#include "MIPT.h"
+#include "SOLVER.h"
+#include "MyAssert.h"
+
 
 NUM_SOL Solver(equation P, double * x1, double * x2) {
-    MyAssert(x1 == NULL);
-    MyAssert(x2 == NULL);
-
+    MyAssert(x1 != NULL);
+    MyAssert(x2 != NULL);
     if (IsZero(P.a)) {
         if (IsZero(P.b)) {
             if(IsZero(P.c)) {
@@ -20,6 +20,10 @@ NUM_SOL Solver(equation P, double * x1, double * x2) {
     else {
         if (IsZero(P.c)) {
             *x1 = 0;
+            if (IsZero(P.b)) {
+                *x2 = 0;
+                return SOL_ONE;
+            }
             *x2 = (-P.b) / P.a;
             return SOL_TWO;
         }
@@ -28,15 +32,15 @@ NUM_SOL Solver(equation P, double * x1, double * x2) {
 }
 
 NUM_SOL LinearSolver(equation P, double * x) {
-    MyAssert(x == NULL);
+    MyAssert(x != NULL);
 
     *x = (-P.c) / P.b;
     return SOL_ONE;
 }
 
 NUM_SOL QuadraticSolver(equation P, double * x1 , double * x2) {
-    MyAssert(x1 == 0);
-    MyAssert(x2 == 0);
+    MyAssert(x1 != NULL);
+    MyAssert(x2 != NULL);
 
     double D = P.b * P.b - 4 * P.a * P.c;
     if (D>0) {
@@ -53,3 +57,4 @@ NUM_SOL QuadraticSolver(equation P, double * x1 , double * x2) {
     }
 
 }
+

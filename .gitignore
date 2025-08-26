@@ -1,3 +1,5 @@
 *.o
 coefficients.txt
-MIPT
+MAIN
+GCC.sh
+html
