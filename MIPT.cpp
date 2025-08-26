@@ -13,21 +13,17 @@
 */
 
 int main(int argc, const char *argv[]) {
+    FindInFlagBase(argc, argv);
     printf("%s\n", __TIME__);
     equation P = {};
     double x1 = 0, x2 = 0;
     NUM_SOL num_sol = SOL_ZERO;
-
-    if (FlagFinder(argc, argv, "-t")) {
-        TestSolver();
-        return 0;
-    }
-
+    /*
     if (FlagFinder(argc, argv, "/home/pasha/p/PROJECT/coefficients.txt")) {
         ReadFromFile(argv[1], P, &x1, &x2);
         return 0;
     }
-
+    */
     printf("Enter the mode: [m|f|u] (m - manual, f - file (default), u - unit test)\n");
     char mode = 'M';
     scanf("%c", &mode);
@@ -58,7 +54,7 @@ int main(int argc, const char *argv[]) {
             printf("%sERROR%s: Incorrect input \n\n", RED, RESET);
             break;
         }
-        ReadFromFile(argv[1], P, &x1, &x2);
+        ReadFromFile(argv[1], &x1, &x2);
         break;
     }
 
@@ -209,9 +205,14 @@ bool ComparisonStr(const char * str1, const char * str2) {
     return true;
 }
 
-void FindInFlagBase() {
-    switch(){
-
+void FindInFlagBase(int argc, const char * argv[]) {
+    for(int i = 0; i < argc; i++) {
+        if(ComparisonStr(argv[i],"-t")) {
+            TestSolver();
+        }
+        if(ComparisonStr(argv[i],"-f")) {
+            ReadFromFile(argv);
+        }
     }
 }
 
