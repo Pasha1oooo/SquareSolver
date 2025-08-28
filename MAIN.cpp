@@ -11,7 +11,8 @@ typedef enum {
     MODE_t = 1,
     MODE_f = 2,
     MODE_h = 3,
-    MODE_m = 4
+    MODE_m = 4,
+    MODE_kit = 5
 } FLAGS;
 
 static void    ManualMode(void);
@@ -34,8 +35,16 @@ int main(int argc, const char *argv[]) {
     //double DX;
     printf("%s\n", __TIME__);
     printf("MEOW\n");
+
+    FILE * fin2 = fopen("POLTORASHKA.txt", "r");
+
     const char * file = NULL;
     switch(FindInFlagBase( argc, argv, &file)) {
+    case MODE_kit:
+        for (int i=0; i<22300;i++){
+            putchar(getc(fin2));
+        }
+        return 0;
     case MODE_t:
         TestSolver();
         return 0;
@@ -75,7 +84,7 @@ static int ReadFromFile(const char * argv) {
 }
 
 /**
-    \brief
+    \brief функция которая выводит корни
 
     \tparam
 
@@ -211,6 +220,9 @@ static FLAGS FindInFlagBase(int argc, const char * argv[], const char ** file) {
         if(ComparisonStr(argv[i],"--help")) {
             return MODE_h;
         }
+        if(ComparisonStr(argv[i],"-kitten")) {
+            return MODE_kit;
+        }
     }
     return MODE_m;
 }
@@ -227,6 +239,7 @@ static void PrintHelp(void) {
     printf("-t                  : starts unit tests\n");
     printf("-f <name of file>   : solve tests from file\n");
     printf("--help              : print information about flags\n");
+    printf("--help              : printit koshku poltorashku\n");
 }
 static void ManualMode(void) {
     equation P = {};
