@@ -27,6 +27,7 @@ static int     ReadFromFile(const char * argv);
 static void    PrintUnitTestResult(NUM_SOL true_num_sol, NUM_SOL num_sol, double x1, double x2, int i, char * a,  int * unit_passed, int * num, int num_r);
 static int     FlagFinder(int argc, const char * argv[], const char * flag);
 static bool    ComparisonStr(const char * str1, const char * str2); //strcmp
+static char *    DynamicRead(FILE * fin);
 
 int main(int argc, const char *argv[]) {
     //double DX;
@@ -116,18 +117,11 @@ static void PrintSol(NUM_SOL num_sol, double x1, double x2) {
     \brief функция которая запускает проверку работоспособности программы
     \brief Для её работы нужен файл "Unit_Tests.txt" с 3 коэффицентами , количеством решений и правильно решённым уравнением соответсвенно для каждого теста
 */
+    //n = fread(a,sizeof(char),n,fin);
 
 static void TestSolver(void) {
     FILE * fin = fopen("Unit_Tests.txt", "r");
-    fseek(fin,0,SEEK_END);
-    size_t n = (long unsigned int)ftell(fin);
-    printf("n = %lu\n", n);
-    char * a = (char*)calloc(n,sizeof(char));
-    fseek(fin,0,SEEK_SET);
-    n = fread(a,sizeof(char),n,fin);
-    printf("n = %lu\n", n);
-    //fread malloc (f)stat/ftell+fseek sscanf+%n
-    // + ded format
+    char * a = DynamicRead(fin);
     equation P = {};
     NUM_SOL true_num_sol = SOL_ZERO;
     int i = 1;
@@ -136,6 +130,7 @@ static void TestSolver(void) {
     int num = 0;
     int num_r = 0;
     while(1) {
+        i//nt .. = pfscanf(pf, "a = %d", &a)
         int scanOK = sscanf(a + num_r, "a = %lf, b = %lf, c = %lf, n = %d%n", &P.a, &P.b, &P.c, (int*)&true_num_sol, &num);
         num_r+=num;
         if(scanOK < 4) {
@@ -146,7 +141,7 @@ static void TestSolver(void) {
         num_r+=num;
         i++;
     }
-    printf("Tests passed : %d / %d    %d\n", unit_passed, i-1, num);
+    printf("Tests passed : %d / %d\n", unit_passed, i-1);
     free(a);
 
 }
@@ -154,6 +149,9 @@ static void TestSolver(void) {
 /**
     \brief функция, которая выводит информацию о том правильно ли отработала программа
     \param [in] num_sol - количество решений уравнения
+    \param [in] x1, x2 - корни уравнения
+    \param [in] x1, x2 - корни уравнения
+    \param [in] x1, x2 - корни уравнения
     \param [in] x1, x2 - корни уравнения
 */
 
@@ -296,4 +294,13 @@ static void ManualMode(void) {
         default :
             break;
         }
+}
+
+static char * DynamicRead(FILE * fin){
+    fseek(fin,0,SEEK_END);
+    size_t n = (long unsigned int)ftell(fin);
+    char * a = (char*)calloc(n+1,sizeof(char));
+    fseek(fin,0,SEEK_SET);
+    fread(a,sizeof(char),n,fin);
+    return a;
 }
