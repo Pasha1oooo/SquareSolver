@@ -23,11 +23,11 @@ run: MAIN
 # 	@./MAIN "/home/pasha/p/PROJECT/coefficients.txt"
 
 MAIN: MAIN.o SOLVER.o
-	@g++ ${CXXFLAGS} MAIN.o SOLVER.o -o MAIN
+	@g++ -g ${CXXFLAGS} MAIN.o SOLVER.o -o MAIN
 
 MAIN.o: MAIN.cpp COLORS.h MyAssert.h SOLVER.h
-	@g++ ${CXXFLAGS} -c MAIN.cpp -o MAIN.o
+	@g++ -g ${CXXFLAGS} -c MAIN.cpp -o MAIN.o
 
 SOLVER.o: SOLVER.cpp
-	@g++ ${CXXFLAGS} -c SOLVER.cpp -o SOLVER.o
+	@g++ -g ${CXXFLAGS} -c SOLVER.cpp -o SOLVER.o
 
